@@ -6,6 +6,12 @@ public class Constants {
 	public static final int DISPLAY_WIDTH = 1280;
 	public static final int DISPLAY_HEIGHT = 720;
 	
+	//Background Color
+	public static final float BACKGROUND_R = 0.3f;
+	public static final float BACKGROUND_G = 0.95f;
+	public static final float BACKGROUND_B = 0.8f;
+	public static final float BACKGROUND_A = 1.0f;
+	
 	//Projection Matrix
 	public static final float FOV = 70;
 	public static final float NEAR_PLANE = 0.5f;

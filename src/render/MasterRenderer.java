@@ -1,101 +1,49 @@
 package render;
 
-import static org.lwjgl.opengl.GL11.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
-
-import constants.Constants;
+import entities.Camera;
 import entities.Entity;
-import math.MathUtils;
-import model.RawModel;
+import entities.Light;
+import math.Matrix4f;
 import model.TexturedModel;
 import shaders.StaticShader;
 
 public class MasterRenderer {
+	private StaticShader shader;
+	private Renderer renderer;
 	
-	public MasterRenderer(StaticShader shader) {
-		init();
+	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
+	private Matrix4f projectionMatrix;
+	
+	public void render(Light light, Camera camera) {
+		renderer.prepare();
 		shader.start();
-		shader.loadProjectionMatrix(MathUtils.createProjectionMatrix(Constants.FOV, Constants.NEAR_PLANE, Constants.FAR_PLANE));
+		shader.loadLight(light);
+		shader.loadViewMatrix(camera);
+		renderer.renderEntities(entities);
 		shader.stop();
+		entities.clear();
 	}
 	
-	public void render() {
-		prepare();
-	}
-	
-	public void renderEntity(Entity entity, StaticShader shader) {
+	public void processEntity(Entity entity) {
 		TexturedModel tm = entity.getTm();
-		RawModel rm = tm.getModel();
-		GL30.glBindVertexArray(rm.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glEnableVertexAttribArray(2);
-		
-		//GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, model.getVertexCount());
-		shader.loadSpecular(tm.getTexture().getShineDamper(), tm.getTexture().getShineDamper());
-		shader.loadTransformationMatrix(MathUtils.createTransformationMatrix(entity.getPosition(), 
-				entity.getRx(), entity.getRy(), entity.getRz(), entity.getScale()));
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, entity.getTm().getTexture().getID());
-		
-		GL11.glDrawElements(GL11.GL_TRIANGLES, rm.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(2);
-		GL30.glBindVertexArray(0);
-	}
-	
-	public void renderTexturedModel(TexturedModel model) {
-		RawModel rm = model.getModel();
-		GL30.glBindVertexArray(rm.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
-		//GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, model.getVertexCount());
-		GL11.glDrawElements(GL11.GL_TRIANGLES, rm.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL30.glBindVertexArray(0);
-	}
-	
-	public void renderRawModel(RawModel model) {
-		GL30.glBindVertexArray(model.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		//GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, model.getVertexCount());
-		GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-		GL20.glDisableVertexAttribArray(0);
-		GL30.glBindVertexArray(0);
-	}
-	
-	/**
-	 * Prepare the FrameBuffer
-	 * Clears the FrameBuffer to a color
-	 */
-	private void prepare() {
-		glEnable(GL_DEPTH_TEST);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.3f, 0.95f, 0.8f, 1.0f);							//Clear the color buffers to a certain set color: 0.3f, 0.95f, 0.8f, 1.0
-		
-		
-	}
-	
-	/**
-	 * Initialize OpenGL to enable Framebuffer characteristics
-	 */
-	private void init() {
-												//Allows OpenGL's framebuffer to sort whether objects are in front of each other
-		GL11.glEnable(GL11.GL_CULL_FACE); 
-		GL11.glCullFace(GL11.GL_BACK);
-		
+		List<Entity> batch = entities.get(tm);
+		if (batch != null) {
+			batch.add(entity);
+		} else {
+			List<Entity> newBatch = new ArrayList<Entity>();
+			newBatch.add(entity);
+			entities.put(tm, newBatch);
+		}
 	}
 	
 	public void cleanUp() {
-		
+		shader.cleanUp();
 	}
+	
 	
 }

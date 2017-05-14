@@ -2,6 +2,11 @@ package tester;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFWErrorCallback.*;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -17,6 +22,7 @@ import model.RawModel;
 import model.TexturedModel;
 import render.Loader;
 import render.MasterRenderer;
+import render.Renderer;
 import render.OBJLoader;
 import render.Window;
 import shaders.StaticShader;
@@ -33,12 +39,16 @@ public class Main {
 	private static long windowID;
 	private static long variableYieldTime;
 	private static long lastTime;
+	private static Random random = new Random();
+	
 	
 	public static void main(String[] args) {		
 		windowID = Window.createWindow("Project");
 		Loader loader = new Loader();
-		StaticShader shader = new StaticShader();
-		MasterRenderer renderer = new MasterRenderer(shader);
+		
+
+		
+		
 		//RawModel rm = loader.loadToVAO(vertices, textureCoords, indices); 
 		RawModel rm = OBJLoader.loadObjModel("stall", loader);
 		ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture"));
@@ -49,6 +59,10 @@ public class Main {
 		Entity entity = new Entity(tm, new Vector3f(0, 0, -25f), 0,0,0,1);
 		Camera camera = new Camera(windowID);
 		
+		
+		
+		MasterRenderer renderer = new MasterRenderer();
+		
 		//Main Game Loop
 		while(!Window.shouldClose(windowID)) {
 			
@@ -57,19 +71,20 @@ public class Main {
 			camera.move();
 			updateTimer();	
 			
-			renderer.render();
-			shader.start();	
-			shader.loadLight(light);
-			shader.loadViewMatrix(camera);
-			renderer.renderEntity(entity, shader);
+			for (Entity cube : allCubes) {
+				renderer.processEntity(cube);
+			}
 			
-			shader.stop();
+			renderer.render(light, camera);
+			
+			
 			Window.render(windowID);	
 		}
+		
 		Window.cleanUp(windowID);
 		renderer.cleanUp();
 		loader.cleanUp();
-		shader.cleanUp();
+
 		
 		
 	}
