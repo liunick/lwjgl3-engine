@@ -22,10 +22,11 @@ import model.RawModel;
 import model.TexturedModel;
 import render.Loader;
 import render.MasterRenderer;
-import render.Renderer;
+import render.EntityRenderer;
 import render.OBJLoader;
 import render.Window;
 import shaders.StaticShader;
+import terrains.Terrain;
 import texture.ModelTexture;
 
 public class Main {
@@ -55,10 +56,12 @@ public class Main {
 		texture.setShineDamper(10);
 		texture.setReflectivity(1);
 		TexturedModel tm = new TexturedModel(rm, texture);
-		Light light = new Light(new Vector3f(0,20, -1), new Vector3f(1, 1, 1));
+		Light light = new Light(new Vector3f(Constants.LIGHT_X, Constants.LIGHT_Y, Constants.LIGHT_Z), new Vector3f(1, 1, 1));
 		Entity entity = new Entity(tm, new Vector3f(0, 0, -25f), 0,0,0,1);
 		Camera camera = new Camera(windowID);
 		
+		Terrain terrain = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain2 = new Terrain(1, -1, loader, new ModelTexture(loader.loadTexture("grass")));
 		
 		
 		MasterRenderer renderer = new MasterRenderer();
@@ -70,10 +73,10 @@ public class Main {
 			entity.increaseRotation(0f, 1f, 0f);
 			camera.move();
 			updateTimer();	
-			
-			for (Entity cube : allCubes) {
-				renderer.processEntity(cube);
-			}
+	
+			renderer.processTerrain(terrain2);
+			renderer.processTerrain(terrain);
+			renderer.processEntity(entity);
 			
 			renderer.render(light, camera);
 			

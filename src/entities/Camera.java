@@ -7,11 +7,11 @@ import org.lwjgl.glfw.GLFW;
 import constants.Constants;
 
 public class Camera {
-	private Vector3f position = new Vector3f();
+	private Vector3f position = new Vector3f(Constants.CAM_X, Constants.CAM_Y, Constants.CAM_Z);
 	
-	private float pitch;
-	private float yaw;
-	private float roll;
+	private float pitch = 20;
+	private float yaw = 10;
+	private float roll = 0;
 	private long windowID;
 	
 	
