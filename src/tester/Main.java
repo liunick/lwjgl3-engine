@@ -28,6 +28,8 @@ import render.Window;
 import shaders.StaticShader;
 import terrains.Terrain;
 import texture.ModelTexture;
+import texture.TerrainTexture;
+import texture.TerrainTexturePack;
 
 public class Main {
 	
@@ -47,9 +49,6 @@ public class Main {
 		windowID = Window.createWindow("Project");
 		Loader loader = new Loader();
 		
-
-		
-		
 		//RawModel rm = loader.loadToVAO(vertices, textureCoords, indices); 
 		RawModel rm = OBJLoader.loadObjModel("stall", loader);
 		ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture"));
@@ -60,8 +59,16 @@ public class Main {
 		Entity entity = new Entity(tm, new Vector3f(0, 0, -25f), 0,0,0,1);
 		Camera camera = new Camera(windowID);
 		
-		Terrain terrain = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("grass")));
-		Terrain terrain2 = new Terrain(1, -1, loader, new ModelTexture(loader.loadTexture("grass")));
+		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
+		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
+		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
+		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
+		
+		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendmap"));
+		
+		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap);
+		Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap);
 		
 		
 		MasterRenderer renderer = new MasterRenderer();
@@ -79,8 +86,7 @@ public class Main {
 			renderer.processEntity(entity);
 			
 			renderer.render(light, camera);
-			
-			
+
 			Window.render(windowID);	
 		}
 		

@@ -62,6 +62,10 @@ public abstract class GenericShader {
 		GL20.glBindAttribLocation(programID, attributeNumber, variableName);
 	}
 	
+	protected void loadInt(int location, int value) {
+		GL20.glUniform1i(location, value);
+	}
+	
 	protected void loadBoolean(int location, boolean value) {
 		GL20.glUniform1f(location, value ? 1 : 0);
 	}

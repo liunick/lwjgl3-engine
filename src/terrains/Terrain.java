@@ -4,16 +4,20 @@ import constants.Constants;
 import model.RawModel;
 import render.Loader;
 import texture.ModelTexture;
+import texture.TerrainTexture;
+import texture.TerrainTexturePack;
 
 public class Terrain {
 
 	private float x;
 	private float z;
 	private RawModel model;
-	private ModelTexture texture;
+	private TerrainTexturePack texturePack;
+	private TerrainTexture blendMap;
 	
-	public Terrain(int gridX, int gridZ, Loader loader, ModelTexture texture) {
-		this.texture = texture;
+	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap) {
+		this.texturePack = texturePack;
+		this.blendMap = blendMap;
 		this.x = gridX * Constants.TERRAIN_SIZE;
 		this.z = gridZ * Constants.TERRAIN_SIZE;
 		model = generateTerrain(loader);
@@ -31,10 +35,14 @@ public class Terrain {
 		return model;
 	}
 	
-	public ModelTexture getTexture() {
-		return texture;
+	public TerrainTexturePack getTexturePack() {
+		return texturePack;
 	}
-	
+
+	public TerrainTexture getBlendMap() {
+		return blendMap;
+	}
+
 	private RawModel generateTerrain(Loader loader){
 		int count = Constants.TERRAIN_VERTEX_COUNT * Constants.TERRAIN_VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
