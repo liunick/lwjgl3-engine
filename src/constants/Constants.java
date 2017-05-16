@@ -38,4 +38,8 @@ public class Constants {
 	public static final float LIGHT_Y = 20000;
 	public static final float LIGHT_Z = 2000;
 	
+	//Fog
+	public static final float FOG_DENSITY= 0.007f;
+	public static final float FOG_GRADIENT = 1.5f;
+	
 }

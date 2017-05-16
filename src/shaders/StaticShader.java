@@ -20,6 +20,8 @@ public class StaticShader extends GenericShader {
 	private int location_reflectivity;
 	private int location_useFakeLighting;
 	private int location_skyColor;
+	private int location_density;
+	private int location_gradient;
 	
 	public StaticShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -44,6 +46,13 @@ public class StaticShader extends GenericShader {
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_useFakeLighting = super.getUniformLocation("useFakeLighting");
 		location_skyColor = super.getUniformLocation("skyColor");
+		location_density = super.getUniformLocation("density");
+		location_gradient = super.getUniformLocation("gradient");
+	}
+	
+	public void loadFog(float density, float gradient) {
+		super.loadFloat(location_density, density);
+		super.loadFloat(location_gradient, gradient);
 	}
 	
 	public void loadSkyColor(float r, float g, float b) {

@@ -60,6 +60,7 @@ public class MasterRenderer {
 		shader.start();
 		shader.loadLight(light);
 		shader.loadViewMatrix(camera);
+		shader.loadFog(Constants.FOG_DENSITY, Constants.FOG_GRADIENT);
 		shader.loadSkyColor(Constants.BACKGROUND_R, Constants.BACKGROUND_G, Constants.BACKGROUND_B);
 		renderer.renderEntities(entities);
 		shader.stop();
@@ -67,6 +68,7 @@ public class MasterRenderer {
 		terrainShader.start();
 		terrainShader.loadLight(light);
 		terrainShader.loadViewMatrix(camera);
+		terrainShader.loadFog(Constants.FOG_DENSITY, Constants.FOG_GRADIENT);
 		terrainShader.loadSkyColor(Constants.BACKGROUND_R, Constants.BACKGROUND_G, Constants.BACKGROUND_B);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();

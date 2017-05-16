@@ -15,3 +15,4 @@ Deviations from tutorial
 - Constants class is created so that there are as little hard coded values as possible.
 - Camera is intended to model 2.5D instead of the 0-yaw, 0-pitch, 0-roll view adopted by the tutorial
 - Projection matrix is defined in MathUtils for consistency
+- Fog constants are designated outside of GLSL code
