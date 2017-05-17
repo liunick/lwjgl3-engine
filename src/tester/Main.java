@@ -11,12 +11,14 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFWErrorCallback.*;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLXARBCreateContext;
 
 import constants.Constants;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
 import math.Vector3f;
 import model.RawModel;
 import model.TexturedModel;
@@ -33,20 +35,16 @@ import texture.TerrainTexturePack;
 
 public class Main {
 	
-	private static long lostTime = System.nanoTime();
-	private static long currTime = lostTime;
-	private static long timer = System.currentTimeMillis();
-	private static double delta = 0.0;
-	private static int fps = 0;
-	private static int ups = 0;
-	private static long windowID;
+	
+	//private static long windowID;
 	private static long variableYieldTime;
 	private static long lastTime;
 	private static Random random = new Random();
 	
 	
 	public static void main(String[] args) {		
-		windowID = Window.createWindow("Project");
+		//windowID = Window.createWindow("Project");
+		Window window = new Window("Project");
 		Loader loader = new Loader();
 		
 		//RawModel rm = loader.loadToVAO(vertices, textureCoords, indices); 
@@ -57,7 +55,9 @@ public class Main {
 		TexturedModel tm = new TexturedModel(rm, texture);
 		Light light = new Light(new Vector3f(Constants.LIGHT_X, Constants.LIGHT_Y, Constants.LIGHT_Z), new Vector3f(1, 1, 1));
 		Entity entity = new Entity(tm, new Vector3f(0, 0, -25f), 0,0,0,1);
-		Camera camera = new Camera(windowID);
+		Camera camera = new Camera(window.getWindowID());
+		Player player = new Player(window, tm, new Vector3f(100,0, -50), 0, 0, 0, 1);
+		
 		
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
@@ -74,23 +74,23 @@ public class Main {
 		MasterRenderer renderer = new MasterRenderer();
 		
 		//Main Game Loop
-		while(!Window.shouldClose(windowID)) {
-			
+		while(!window.shouldClose()) {
 			//entity.increasePosition(0.0000f, 1f, 0f);
 			entity.increaseRotation(0f, 1f, 0f);
 			camera.move();
-			updateTimer();	
+			player.move();
+			
 	
 			renderer.processTerrain(terrain2);
 			renderer.processTerrain(terrain);
 			renderer.processEntity(entity);
+			renderer.processEntity(player);
 			
 			renderer.render(light, camera);
-
-			Window.render(windowID);	
+			window.update();		
 		}
 		
-		Window.cleanUp(windowID);
+		window.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 
@@ -98,21 +98,7 @@ public class Main {
 		
 	}
 	
-	public static void updateTimer() {
-		currTime = System.nanoTime();
-		delta += (currTime - lostTime) / Constants.NS;
-		lostTime = currTime;	
-		while (delta >= 1.0) {
-			glfwPollEvents();
-			ups++;
-			delta--;
-		}
-		fps++;		
-		if (System.currentTimeMillis() > timer + 1000) {
-			Window.setTitle(windowID, "ups: " + ups + ", fps: " + fps);
-			ups = 0;
-			fps = 0;
-			timer += 1000;
-		}
-	}
+	
+	
+	
 }

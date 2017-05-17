@@ -20,6 +20,7 @@ public class Camera {
 	}
 
 	public void move() {
+		/*
 		if(GLFW.glfwGetKey(windowID, GLFW.GLFW_KEY_W) == 1 || GLFW.glfwGetKey(windowID, GLFW.GLFW_KEY_UP) == 1) {
 			position.z -= Constants.CAM_SPEED;
 		}
@@ -37,7 +38,7 @@ public class Camera {
 		}
 		if(GLFW.glfwGetKey(windowID, GLFW.GLFW_KEY_E) == 1) {
 			position.y -= Constants.CAM_SPEED;
-		}
+		}*/
 	}
 	
 	public Vector3f getPosition() {

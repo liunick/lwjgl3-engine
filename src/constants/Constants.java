@@ -28,7 +28,7 @@ public class Constants {
 	public static final float CAM_SPEED = 0.8f;
 	public static final float CAM_X = 0;
 	public static final float CAM_Y = 50;
-	public static final float CAM_Z = 0;
+	public static final float CAM_Z = 50;
 	public static final float CAM_PITCH = 20;
 	public static final float CAM_YAW = 10;
 	public static final float CAM_ROLL = 0;
@@ -41,5 +41,14 @@ public class Constants {
 	//Fog
 	public static final float FOG_DENSITY= 0.007f;
 	public static final float FOG_GRADIENT = 1.5f;
+	
+	//Player
+	public static final float PLAYER_SPEED = 2;
+	public static final float PLAYER_TURN = 5;
+	public static final float PLAYER_JUMP = 3;
+	
+	//Environment
+	public static final float ENVIRONMENT_GRAVITY = -0.2f;
+	public static final float ENVIRONMENT_HEIGHT = 0;
 	
 }

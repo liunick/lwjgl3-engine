@@ -3,6 +3,8 @@ package render;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.*;
+
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -11,32 +13,66 @@ import constants.Constants;
 
 public class Window {
 	
+	private long lastFrameTime;
+	private long lostTime = System.nanoTime();
+	private long currTime = lostTime;
+	private long timer = System.currentTimeMillis();
+	private double delta = 0.0;
+	private int fps = 0;
+	private int ups = 0;
 	
-	public Window() {
+	
+	private long windowID;
+	
+	public Window(String title) {
+		this.windowID = createWindow(title);
 	}
 	
-	public static long createWindow(String title) {
+	public long getWindowID() {
+		return windowID;
+	}
+	
+	public boolean shouldClose() {
+		if (!glfwWindowShouldClose(windowID))
+			return false;
+		return true;
+	}
+	
+	public void hide() {
+		glfwHideWindow(windowID);
+	}
+	
+	public void show() {
+		glfwShowWindow(windowID);
+	}
+	
+	public void cleanUp() {
+		glfwHideWindow(windowID);
+		glfwDestroyWindow(windowID);
+	}
+	
+	public void update() {
+    	//
+    	glfwSwapBuffers(windowID);
+    	updateTimer();
+	}
+	
+	public void setTitle(String title) {
+		glfwSetWindowTitle(windowID, title);
+	}
+	
+    public float getDelta() {
+    	System.out.println("double: " + delta + ", long: " + (float)delta);
+    	return (float) delta;
+    }
+	
+	private long createWindow(String title) {
 		glfwInit();
 		int display_width = Constants.DISPLAY_WIDTH;
 		int display_height = Constants.DISPLAY_HEIGHT;
+		
 		glfwDefaultWindowHints();
-		
-		//glfwWindowHint(GLFW_DEPTH_BITS, GL_TRUE);
-		//glfwWindowHint(GL_DONT_CARE, GL_TRUE);
-		/*glfwWindowHint(GLFW_RED_BITS, GL_TRUE);
-		glfwWindowHint(GLFW_GREEN_BITS, GL_TRUE);
-		glfwWindowHint(GLFW_BLUE_BITS, GL_TRUE);
-		glfwWindowHint(GLFW_ALPHA_BITS, GL_TRUE);
-		glfwWindowHint(GLFW_STENCIL_BITS, GL_TRUE);
-		glfwWindowHint(GLFW_ACCUM_RED_BITS, GL_TRUE);
-		glfwWindowHint(GLFW_ACCUM_GREEN_BITS, GL_TRUE);
-		glfwWindowHint(GLFW_ACCUM_BLUE_BITS, GL_TRUE);
-		glfwWindowHint(GLFW_ACCUM_ALPHA_BITS, GL_TRUE);
-		glfwWindowHint(GLFW_AUX_BUFFERS, GL_TRUE);
-		//glfwWindowHint(GLFW_STEREO, GL_TRUE);*/
 		glfwWindowHint(GLFW_SAMPLES, GL_DONT_CARE);
-		
-		
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -56,39 +92,32 @@ public class Window {
 		glfwMakeContextCurrent(windowID);
 		glfwSwapInterval(1);
 		GL.createCapabilities();
+		
 		return windowID;
 	}
 	
-	public static void cleanUp(long windowID) {
-		glfwHideWindow(windowID);
-		glfwDestroyWindow(windowID);
-		
+    private void updateTimer() {    	
+		currTime = System.nanoTime();
+		delta += (currTime - lostTime) / Constants.NS;
+		lostTime = currTime;	
+		//System.out.println(delta);
+		while (delta >= 1.0) {
+			glfwPollEvents();
+			ups++;
+			delta--;
+		}
+		fps++;		
+		if (System.currentTimeMillis() > timer + 1000) {
+			setTitle("ups: " + ups + ", fps: " + fps);
+			ups = 0;
+			fps = 0;
+			timer += 1000;
+		}
 	}
+
+
+    
+
 	
-	public static void destroy(long windowID) {
-		glfwDestroyWindow(windowID);
-	}
-	
-	public static void hide(long windowID) {
-		glfwHideWindow(windowID);
-	}
-	
-	public static void show(long windowID) {
-		glfwShowWindow(windowID);
-	}
-	
-	public static void render(long windowID) {
-		glfwSwapBuffers(windowID);
-	}
-	
-	public static void setTitle(long windowID, String title) {
-		glfwSetWindowTitle(windowID, title);
-	}
-	
-	public static boolean shouldClose(long windowID) {
-		if (!glfwWindowShouldClose(windowID))
-			return false;
-		return true;
-	}
 	
 }

@@ -9,7 +9,7 @@ public class Entity {
 	private float rx, ry, rz;
 	private float scale;
 	
-	public Entity(TexturedModel tm, Vector3f position, float rx, float ry, float rz, float scale) {
+	public Entity( TexturedModel tm, Vector3f position, float rx, float ry, float rz, float scale) {
 		this.tm = tm;
 		this.position = position;
 		this.rx = rx;

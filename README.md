@@ -9,7 +9,7 @@ ThinMatrix uses a deprecated version of LWJGL (LWJGL 2). This project follows al
 Differences between LWJGL 2 and LWJGL 3 discovered so far:
 - No more Display class -> Instead adopts GLFW
 - No more Vector/Matrix classes -> Created my own Vector/Matrix classes
-
+- Getting input now is uses GLFW to get keys.
 
 Deviations from tutorial
 - Constants class is created so that there are as little hard coded values as possible.
