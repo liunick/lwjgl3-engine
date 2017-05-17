@@ -55,9 +55,9 @@ public class Main {
 		TexturedModel tm = new TexturedModel(rm, texture);
 		Light light = new Light(new Vector3f(Constants.LIGHT_X, Constants.LIGHT_Y, Constants.LIGHT_Z), new Vector3f(1, 1, 1));
 		Entity entity = new Entity(tm, new Vector3f(0, 0, -25f), 0,0,0,1);
-		Camera camera = new Camera(window.getWindowID());
-		Player player = new Player(window, tm, new Vector3f(100,0, -50), 0, 0, 0, 1);
 		
+		Player player = new Player(window, tm, new Vector3f(100,0, -50), 0, 0, 0, 1);
+		Camera camera = new Camera(window.getWindowID(), player);
 		
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
@@ -77,9 +77,9 @@ public class Main {
 		while(!window.shouldClose()) {
 			//entity.increasePosition(0.0000f, 1f, 0f);
 			entity.increaseRotation(0f, 1f, 0f);
-			camera.move();
-			player.move();
 			
+			player.move();
+			camera.move();
 	
 			renderer.processTerrain(terrain2);
 			renderer.processTerrain(terrain);

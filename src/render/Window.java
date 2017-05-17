@@ -21,6 +21,8 @@ public class Window {
 	private int fps = 0;
 	private int ups = 0;
 	
+	private int framecount = 0;
+	
 	
 	private long windowID;
 	
@@ -55,6 +57,8 @@ public class Window {
     	//
     	glfwSwapBuffers(windowID);
     	updateTimer();
+    	//System.out.println("------------------------------------\nFrame: " + framecount); //+framecount lags the system???
+    	//framecount++;
 	}
 	
 	public void setTitle(String title) {
@@ -62,7 +66,6 @@ public class Window {
 	}
 	
     public float getDelta() {
-    	System.out.println("double: " + delta + ", long: " + (float)delta);
     	return (float) delta;
     }
 	

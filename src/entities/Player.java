@@ -32,9 +32,8 @@ public class Player extends Entity{
 		super.increaseRotation(0, currentTurnSpeed, 0);
 		//System.out.println(window.getDelta());
 		float distance = currentSpeed * window.getDelta();
-		System.out.println("curr: " + currentSpeed + " distance: " + distance);
-		float dx = (float)(distance * Math.sin(Math.toRadians(super.getRy())));
-		float dz = (float)(distance * Math.cos(Math.toRadians(super.getRy())));
+		float dx = -(float)(distance * Math.sin(Math.toRadians(super.getRy())));
+		float dz = -(float)(distance * Math.cos(Math.toRadians(super.getRy())));
 		//float dy = (float)(currentJump * window.getDelta());
 		super.increasePosition(dx, 0, dz);
 		currentJump += Constants.ENVIRONMENT_GRAVITY;
