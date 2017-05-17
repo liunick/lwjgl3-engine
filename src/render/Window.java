@@ -20,6 +20,7 @@ public class Window {
 	private double delta = 0.0;
 	private int fps = 0;
 	private int ups = 0;
+	private boolean inWire = false;
 	
 	private int framecount = 0;
 	
@@ -59,6 +60,8 @@ public class Window {
     	updateTimer();
     	//System.out.println("------------------------------------\nFrame: " + framecount); //+framecount lags the system???
     	//framecount++;
+
+    	
 	}
 	
 	public void setTitle(String title) {

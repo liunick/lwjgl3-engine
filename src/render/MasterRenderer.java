@@ -114,6 +114,7 @@ public class MasterRenderer {
 	private void init() {																//Allows OpenGL's framebuffer to sort whether objects are in front of each other
 		GL11.glEnable(GL11.GL_CULL_FACE); 
 		GL11.glCullFace(GL11.GL_BACK);
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 	}
 	
 }

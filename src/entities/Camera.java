@@ -5,10 +5,15 @@ import utilities.CursorPositionCallback;
 import utilities.MouseButtonCallback;
 import utilities.ScrollCallback;
 
+import static org.lwjgl.opengl.GL11.GL_FILL;
+import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11.GL_LINE;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
+import org.lwjgl.opengl.GL11;
 
 import constants.Constants;
 
@@ -30,6 +35,9 @@ public class Camera {
 	private float lastValueX = 0;
 	private double mouseDx = 0;
 	private double mouseDy = 0;
+	
+	private boolean inWire = false;
+	private boolean beingPressed = false;
 	
 	private Player player;
 	
@@ -131,6 +139,22 @@ public class Camera {
 		if(clickValue == 1) {
 			float pitchChange = (float)mouseDy - lastValueY; // *0.1f
 			pitch -= pitchChange;
+		}
+		if(beingPressed && !inWire && GLFW.glfwGetKey(windowID, GLFW.GLFW_KEY_P) != 1) {
+			beingPressed = false;
+			inWire = true;
+		}
+		if(beingPressed && inWire && GLFW.glfwGetKey(windowID, GLFW.GLFW_KEY_P) != 1) {
+			beingPressed = false;
+			inWire = false;
+		}
+    	if(GLFW.glfwGetKey(windowID, GLFW.GLFW_KEY_P) == 1 && !inWire) {
+			GL11.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			
+			beingPressed = true;
+		} else if (GLFW.glfwGetKey(windowID, GLFW.GLFW_KEY_P) == 1 && inWire) {
+			GL11.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			beingPressed = true;
 		}
 		lastValueY = (float) mouseDy;
 	}
